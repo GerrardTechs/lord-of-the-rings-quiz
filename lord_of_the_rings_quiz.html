@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lord Of The Rings -QUIZ-</title>
+    
+    <!-- Memuat Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Memuat Google Fonts (Cinzel untuk Medieval, Dancing Script & Poppins untuk romantis) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rose-50': '#fff1f2',
+                        'rose-200': '#fecdd3',
+                        'rose-400': '#fb7185',
+                        'rose-600': '#e11d48',
+                        'pink-100': '#fce7f3',
+                        'fantasy-dark': '#0f172a',
+                        'fantasy-gold': '#d4af37',
+                    },
+                    fontFamily: {
+                        'cinzel': ['"Cinzel"', 'serif'],
+                        'script': ['"Dancing Script"', 'cursive'],
+                        'sans': ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Tema Medieval */
+        .medieval-bg {
+            background-image: url('https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1920&auto=format&fit=crop'); /* Gambar hutan gelap/kastil */
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .fantasy-input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #d4af37;
+            color: #fef08a;
+            font-family: 'Cinzel', serif;
+            transition: all 0.3s ease;
+        }
+        
+        .fantasy-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .fantasy-btn {
+            background: linear-gradient(135deg, #422006, #713f12);
+            border: 2px solid #d4af37;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5), inset 0 1px 3px rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .fantasy-btn:hover {
+            background: linear-gradient(135deg, #713f12, #854d0e);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Tema Anniversary (Romantis) */
+        .hero-bg {
+            background: linear-gradient(-45deg, #fce7f3, #fff1f2, #fecdd3, #ffe4e6);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .heart-beat { animation: heartbeat 1.5s infinite; }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Animasi Carousel Kiri ke Kanan */
+        .carousel-track {
+            display: flex;
+            width: max-content;
+            animation: scroll 30s linear infinite;
+        }
+        .carousel-track:hover { animation-play-state: paused; }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .carousel-item {
+            width: 280px;
+            height: 380px;
+            margin: 0 15px;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .carousel-item:hover { transform: translateY(-10px) scale(1.02); }
+
+        .polaroid {
+            background: white;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        #surprise-section {
+            transition: all 0.8s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #surprise-section.show {
+            max-height: 3000px;
+            opacity: 1;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        /* Utility Transisi Custom */
+        .fade-transition {
+            transition: opacity 0.8s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-fantasy-dark antialiased">
+
+    <div id="medieval-wrapper" class="fixed inset-0 z-50 flex items-center justify-center medieval-bg fade-transition opacity-100">
+        <!-- Overlay gelap untuk memperjelas teks -->
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm z-0"></div>
+        
+        <div class="relative z-10 w-full max-w-2xl px-6 text-center">
+            
+            <div id="intro-screen" class="fade-transition opacity-100 block">
+                <div class="w-16 h-16 mx-auto mb-6 opacity-80">
+                    <!-- Ikon Kunci/Gerbang Fantasi -->
+                    <svg class="text-fantasy-gold" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C9.24 2 7 4.24 7 7C7 8.87 8.04 10.5 9.68 11.43L8.5 13L9.5 14L8.5 15L9.5 16L8.5 17L10.5 19H14.5L14.32 11.43C15.96 10.5 17 8.87 17 7C17 4.24 14.76 2 12 2ZM12 9C10.9 9 10 8.1 10 7C10 5.9 10.9 5 12 5C13.1 5 14 5.9 14 7C14 8.1 13.1 9 12 9Z" />
+                    </svg>
+                </div>
+                <h1 class="font-cinzel text-5xl md:text-6xl text-fantasy-gold font-bold mb-10 tracking-widest drop-shadow-lg">
+                    Apakah kamu Seorang Ringer Sejati?
+                </h1>
+                <button id="btn-open-quest" class="fantasy-btn font-cinzel text-fantasy-gold text-xl py-3 px-10 rounded-full tracking-wider uppercase">
+                    Open Me!
+                </button>
+            </div>
+
+            <div id="quiz-1" class="fade-transition opacity-0 hidden">
+                <p class="font-cinzel text-fantasy-gold text-lg mb-8 tracking-widest uppercase">Selesaikan kuis ini untuk mendapat hadiah!</p>
+                <div class="bg-black/50 p-8 border border-yellow-900 rounded-lg shadow-2xl backdrop-blur-md">
+                    <h2 class="font-cinzel text-2xl md:text-3xl text-gray-200 mb-6">
+                        1. Siapa penulis buku "Lord Of The Rings"?
+                    </h2>
+                    <input type="text" id="input-q1" placeholder="Jawabanmu..." class="fantasy-input w-full text-center text-xl py-3 px-4 rounded mb-4 focus:border-fantasy-gold">
+                    <p id="error-q1" class="text-red-500 font-cinzel text-sm mb-4 h-5 opacity-0 transition-opacity">Jawaban salah, ulangi lagi</p>
+                    <button id="btn-submit-1" class="fantasy-btn font-cinzel text-fantasy-gold text-lg py-2 px-8 rounded tracking-widest w-full">
+                        Jawab
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-2" class="fade-transition opacity-0 hidden">
+                <p class="font-cinzel text-fantasy-gold text-lg mb-8 tracking-widest uppercase">Langkah Kedua</p>
+                <div class="bg-black/50 p-8 border border-yellow-900 rounded-lg shadow-2xl backdrop-blur-md">
+                    <h2 class="font-cinzel text-xl md:text-2xl text-gray-200 mb-6 leading-relaxed">
+                        2. Berapa umur Viggo Mortensen sebagai Aragorn sekarang?<br>
+                        <span class="text-sm text-gray-400">(dia lahir pada tanggal 20 Oktober 1958)</span>
+                    </h2>
+                    <input type="text" id="input-q2" placeholder="Angka umur..." class="fantasy-input w-full text-center text-xl py-3 px-4 rounded mb-4 focus:border-fantasy-gold">
+                    <p id="error-q2" class="text-red-500 font-cinzel text-sm mb-4 h-5 opacity-0 transition-opacity">Jawaban salah, ulangi lagi</p>
+                    <button id="btn-submit-2" class="fantasy-btn font-cinzel text-fantasy-gold text-lg py-2 px-8 rounded tracking-widest w-full">
+                        Jawab
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-3" class="fade-transition opacity-0 hidden">
+                <p class="font-cinzel text-fantasy-gold text-lg mb-8 tracking-widest uppercase">Langkah Ketiga</p>
+                <div class="bg-black/50 p-8 border border-yellow-900 rounded-lg shadow-2xl backdrop-blur-md">
+                    <h2 class="font-cinzel text-xl md:text-2xl text-gray-200 mb-6 leading-relaxed">
+                        3. Siapa nama penyihir bijak yang membimbing Frodo Baggins?
+                    </h2>
+                    <input type="text" id="input-q3" placeholder="Nama penyihir..." class="fantasy-input w-full text-center text-xl py-3 px-4 rounded mb-4 focus:border-fantasy-gold">
+                    <p id="error-q3" class="text-red-500 font-cinzel text-sm mb-4 h-5 opacity-0 transition-opacity">Jawaban salah, ulangi lagi</p>
+                    <button id="btn-submit-3" class="fantasy-btn font-cinzel text-fantasy-gold text-lg py-2 px-8 rounded tracking-widest w-full">
+                        Jawab
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-4" class="fade-transition opacity-0 hidden">
+                <p class="font-cinzel text-fantasy-gold text-lg mb-8 tracking-widest uppercase">Langkah Keempat</p>
+                <div class="bg-black/50 p-8 border border-yellow-900 rounded-lg shadow-2xl backdrop-blur-md">
+                    <h2 class="font-cinzel text-xl md:text-2xl text-gray-200 mb-6 leading-relaxed">
+                        4. Di gunung manakah Cincin Utama (The One Ring) harus dihancurkan?
+                    </h2>
+                    <input type="text" id="input-q4" placeholder="Nama tempat/gunung..." class="fantasy-input w-full text-center text-xl py-3 px-4 rounded mb-4 focus:border-fantasy-gold">
+                    <p id="error-q4" class="text-red-500 font-cinzel text-sm mb-4 h-5 opacity-0 transition-opacity">Jawaban salah, ulangi lagi</p>
+                    <button id="btn-submit-4" class="fantasy-btn font-cinzel text-fantasy-gold text-lg py-2 px-8 rounded tracking-widest w-full">
+                        Jawab
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-5" class="fade-transition opacity-0 hidden">
+                <p class="font-cinzel text-fantasy-gold text-lg mb-8 tracking-widest uppercase">Pertanyaan Terakhir</p>
+                <div class="bg-black/50 p-8 border border-yellow-900 rounded-lg shadow-2xl backdrop-blur-md">
+                    <h2 class="font-cinzel text-2xl md:text-3xl text-gray-200 mb-6">
+                        5. Siapakah your darling?
+                    </h2>
+                    <input type="text" id="input-q5" placeholder="Nama kekasihmu..." class="fantasy-input w-full text-center text-xl py-3 px-4 rounded mb-4 focus:border-fantasy-gold">
+                    <p id="error-q5" class="text-red-500 font-cinzel text-sm mb-4 h-5 opacity-0 transition-opacity">Jawaban salah, ulangi lagi</p>
+                    <button id="btn-submit-5" class="fantasy-btn font-cinzel text-fantasy-gold text-lg py-2 px-8 rounded tracking-widest w-full">
+                        Ungkapkan
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Tersembunyi pada awalnya (hidden & opacity-0) -->
+    <div id="anniversary-wrapper" class="fade-transition opacity-0 hidden text-gray-800 font-sans bg-rose-50 min-h-screen">
+        
+        <header class="hero-bg min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+            <!-- Elemen Hati Dekoratif -->
+            <div class="absolute top-10 left-10 text-rose-400 opacity-50 animate-bounce" style="animation-duration: 3s;">❤️</div>
+            <div class="absolute bottom-20 right-20 text-rose-300 opacity-60 animate-bounce" style="animation-duration: 4s;">💖</div>
+            <div class="absolute top-1/4 right-10 text-pink-300 opacity-40 animate-pulse text-2xl">✨</div>
+            <div class="absolute bottom-1/3 left-20 text-rose-400 opacity-40 animate-pulse text-2xl">✨</div>
+    
+            <div class="max-w-3xl mx-auto z-10">
+                <h2 class="text-rose-500 font-medium tracking-widest uppercase mb-4 text-sm md:text-base">Misi Berhasil Diselesaikan</h2>
+                <h1 class="font-script text-6xl md:text-7xl lg:text-8xl text-rose-600 mb-6 drop-shadow-sm leading-tight">
+                    Happy 4th <br/> Anniversary
+                </h1>
+                <p class="text-lg md:text-xl text-gray-700 mb-10 leading-relaxed font-light">
+                    Hai cintakuu, Happy Anniversary Sweetie!!
+                    Thankyou for always being there by my side 😘<br/>
+                    <span class="heart-beat inline-block text-rose-500 mt-4 text-2xl">❤️</span>
+                </p>
+                
+                <a href="#carousel-section" class="inline-flex items-center gap-2 bg-white text-rose-500 font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:bg-rose-50 transition-all duration-300">
+                    Look at how far we've been through!
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                </a>
+            </div>
+            
+            <!-- Gelombang dekoratif -->
+            <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+                <svg class="block w-full h-12 md:h-24 text-rose-50" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,130.9,127,201,120,260.67,114,312.3,86.6,321.39,56.44Z" fill="currentColor"></path>
+                </svg>
+            </div>
+        </header>
+    
+        <section id="carousel-section" class="py-20 bg-rose-50 overflow-hidden">
+            <div class="text-center mb-12 px-4">
+                <h3 class="font-script text-4xl md:text-5xl text-rose-600 mb-3">Our Lovely Moments</h3>
+                <p class="text-gray-600 font-light">Every frame has foreshadowed our love chapter</p>
+            </div>
+    
+            <div class="relative w-full py-5">
+                <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-rose-50 to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-rose-50 to-transparent z-10 pointer-events-none"></div>
+                
+                <div class="carousel-track">
+                    <!-- Foto Set 1 -->
+                    <div class="carousel-item">
+                        <img src="bk.jpg" alt="Momen 1" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="erin tari sigeh.jpg" alt="Momen 2" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="mariot.jpeg" alt="Momen 3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="ngampus bareng.jpg" alt="Momen 4" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="phd.jpeg" alt="Momen 5" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <!-- Foto Set 2 (Duplikat untuk Infinite Scroll) -->
+                    <div class="carousel-item">
+                        <img src="wisd.jpeg" alt="Momen 1" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="mam dimsum.jpg" alt="Momen 2" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="ws.jpg" alt="Momen 3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="ldr.jpeg" alt="Momen 4" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="first days.jpeg" alt="Momen 5" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <section class="py-16 bg-white relative">
+            <div class="max-w-4xl mx-auto text-center px-4">
+                <h3 class="text-2xl text-gray-800 font-medium mb-6">Hadiah Utama Quest Ini...</h3>
+                
+                <button id="surprise-btn" class="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-4 px-10 rounded-full shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 text-lg flex items-center justify-center gap-3 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Untuk My Baby~
+                </button>
+            </div>
+    
+            <div id="surprise-section" class="bg-pink-50 mt-12 w-full">
+                <div class="max-w-5xl mx-auto px-4">
+                    
+                    <!-- Surat Cinta -->
+                    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl max-w-3xl mx-auto mb-16 relative">
+                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-rose-100 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
+                            </svg>
+                        </div>
+                        <h3 class="font-script text-3xl md:text-4xl text-rose-600 mb-6 text-center mt-4">Teruntuk Sayangku, Erin,</h3>
+                        <p class="text-gray-700 leading-loose text-justify md:text-center md:text-lg mb-4">
+                            Kamu memang secinta itu dengan LOTR, sekarang aku paham kenapa kamu secinta itu, sebuah mahakarya yang layak ditonton berkali-kali,
+                            Layaknya cerita kita yang selalu kamu ceritakan kepada teman-teman dekatmu. Bagiku, kamu adalah Arwen-ku. Dari sekian banyaknya tawa, 
+                            tangis, kesal dan bangga kita telah lalui, tak pernah sekalipun perasaan bosan dipikiranku. setiap rajutan 
+                            cerita pada hari-hari kita, tak disangka sekarang sudah genap 4 tahun kisah itu berjalan,
+                            aku ingin meneruskan cerita tersebut sampai akhir riwayatku bersamamu. 
+                        </p>
+                        <p class="text-gray-700 leading-loose text-justify md:text-center md:text-lg mb-6">
+                            Terima kasih sudah bertahan bersamaku. Ayo kita buat lebih banyak petualangan yang kita tidak akan lupakan hingga tua nanti.
+                            I love you, now and forever after. 💕
+                        </p>
+                        <p class="font-script text-2xl text-rose-500 text-right">- Your Darling</p>
+                    </div>
+    
+                    <!-- Galeri Polaroid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 pb-10">
+                        <div class="polaroid transform rotate-3">
+                            <img src="1737920324716.jpg" alt="Foto 1" class="w-full h-64 object-cover mb-4">
+                            <p class="font-script text-2xl text-center text-gray-800">Our hearts Conjoined</p>
+                        </div>
+                        <div class="polaroid transform -rotate-2 mt-4 md:mt-12">
+                            <img src="blajr brg.jpeg" alt="Foto 2" class="w-full h-64 object-cover mb-4">
+                            <p class="font-script text-2xl text-center text-gray-800">First Learning Session</p>
+                        </div>
+                        <div class="polaroid transform rotate-1 mt-2 md:mt-4">
+                            <img src="first movie date.jpeg" alt="Foto 3" class="w-full h-64 object-cover mb-4">
+                            <p class="font-script text-2xl text-center text-gray-800">First Movie Date</p>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Elemen Audio (Music Quest) -->
+    <audio id="quest-audio" src="Lord of the Rings Main Theme - Only best part.mp3" loop></audio>
+    
+    <!-- Wadah untuk menyuntikkan YouTube Iframe -->
+    <div id="youtube-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Fungsi Transisi Layar yang Smooth ---
+            function transitionScreens(hideId, showId) {
+                const hideEl = document.getElementById(hideId);
+                const showEl = document.getElementById(showId);
+                
+                // Mulai fade-out
+                hideEl.classList.remove('opacity-100');
+                hideEl.classList.add('opacity-0');
+                
+                // Tunggu durasi transisi CSS (800ms) sebelum ganti display
+                setTimeout(() => {
+                    hideEl.classList.add('hidden');
+                    
+                    showEl.classList.remove('hidden');
+                    // Paksa browser me-render ulang sebelum menambah opacity
+                    void showEl.offsetWidth; 
+                    
+                    showEl.classList.remove('opacity-0');
+                    showEl.classList.add('opacity-100');
+                }, 800);
+            }
+
+            // Fungsi untuk menampilkan error text
+            function showError(errorId) {
+                const errEl = document.getElementById(errorId);
+                errEl.classList.remove('opacity-0');
+                errEl.classList.add('opacity-100');
+                
+                // Hilangkan lagi setelah 3 detik
+                setTimeout(() => {
+                    errEl.classList.remove('opacity-100');
+                    errEl.classList.add('opacity-0');
+                }, 3000);
+            }
+
+            // --- Navigasi Kuis ---
+            
+            // 1. Tombol Buka Quest
+            document.getElementById('btn-open-quest').addEventListener('click', () => {
+                transitionScreens('intro-screen', 'quiz-1');
+                
+                // Putar musik latar medieval
+                const questAudio = document.getElementById('quest-audio');
+                questAudio.volume = 0.5; // Sesuaikan volume
+                questAudio.play().catch(e => console.log("Gagal memutar audio:", e));
+            });
+
+            // 2. Kuis 1 (LOTR Author)
+            document.getElementById('btn-submit-1').addEventListener('click', validateQ1);
+            document.getElementById('input-q1').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') validateQ1();
+            });
+
+            function validateQ1() {
+                const val = document.getElementById('input-q1').value.trim().toLowerCase();
+                if (val === 'j.r.r. tolkien' || val === 'j.r.r tolkien' || val === 'jrr tolkien' || val === 'j. r. r. tolkien') {
+                    transitionScreens('quiz-1', 'quiz-2');
+                } else {
+                    showError('error-q1');
+                }
+            }
+
+            // 3. Kuis 2 (Umur Viggo Mortensen)
+            document.getElementById('btn-submit-2').addEventListener('click', validateQ2);
+            document.getElementById('input-q2').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') validateQ2();
+            });
+
+            function validateQ2() {
+                const val = document.getElementById('input-q2').value.trim().toLowerCase();
+                if (val === '67' || val === '67 tahun') {
+                    transitionScreens('quiz-2', 'quiz-3');
+                } else {
+                    showError('error-q2');
+                }
+            }
+
+            // 4. Kuis 3 (Gandalf)
+            document.getElementById('btn-submit-3').addEventListener('click', validateQ3);
+            document.getElementById('input-q3').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') validateQ3();
+            });
+
+            function validateQ3() {
+                const val = document.getElementById('input-q3').value.trim().toLowerCase();
+                if (val.includes('gandalf')) {
+                    transitionScreens('quiz-3', 'quiz-4');
+                } else {
+                    showError('error-q3');
+                }
+            }
+
+            // 5. Kuis 4 (Gunung Doom)
+            document.getElementById('btn-submit-4').addEventListener('click', validateQ4);
+            document.getElementById('input-q4').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') validateQ4();
+            });
+
+            function validateQ4() {
+                const val = document.getElementById('input-q4').value.trim().toLowerCase();
+                // Validasi agar fleksibel menerima kata "doom", "mount doom", atau "gunung doom"
+                if (val.includes('doom') || val.includes('orodruin')) {
+                    transitionScreens('quiz-4', 'quiz-5');
+                } else {
+                    showError('error-q4');
+                }
+            }
+
+            // 6. Kuis 5 (Siapa your darling?)
+            document.getElementById('btn-submit-5').addEventListener('click', validateQ5);
+            document.getElementById('input-q5').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') validateQ5();
+            });
+
+            function validateQ5() {
+                const val = document.getElementById('input-q5').value.trim().toLowerCase();
+                if (val === 'farrel' || val === 'alessandro farrel gerrard wijaya' || val === 'alessandro farrel') {
+                    
+                    // 1. Matikan lagu tema LOTR
+                    const questAudio = document.getElementById('quest-audio');
+                    if (questAudio) {
+                        questAudio.pause();
+                    }
+
+                    // 2. Putar lagu Shape of My Heart
+                    // Pastikan nama file mp3 sesuai dengan yang ada di folder kamu
+                    const anniversaryAudio = new Audio("Shape of My Heart.mp3");
+                    anniversaryAudio.loop = true; 
+                    anniversaryAudio.play().catch(e => console.log("Gagal memutar lagu:", e));
+
+                    // 3. Transisi BUBAR DARI TEMA MEDIEVAL KE TEMA ANNIVERSARY!
+                    transitionScreens('medieval-wrapper', 'anniversary-wrapper');
+                } else {
+                    showError('error-q5');
+                }
+            }
+
+
+            // --- Logika Tombol Kejutan di Anniversary ---
+            const btnSurprise = document.getElementById('surprise-btn');
+            const sectionSurprise = document.getElementById('surprise-section');
+            let isSurpriseOpen = false;
+
+            btnSurprise.addEventListener('click', () => {
+                isSurpriseOpen = !isSurpriseOpen;
+                
+                if (isSurpriseOpen) {
+                    sectionSurprise.classList.add('show');
+                    btnSurprise.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                        </svg>
+                        Tutup Kejutan
+                    `;
+                    btnSurprise.classList.replace('bg-rose-500', 'bg-gray-800');
+                    btnSurprise.classList.replace('hover:bg-rose-600', 'hover:bg-gray-900');
+
+                    setTimeout(() => {
+                        sectionSurprise.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                } else {
+                    sectionSurprise.classList.remove('show');
+                    btnSurprise.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Buka Kejutan Untukmu
+                    `;
+                    btnSurprise.classList.replace('bg-gray-800', 'bg-rose-500');
+                    btnSurprise.classList.replace('hover:bg-gray-900', 'hover:bg-rose-600');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
