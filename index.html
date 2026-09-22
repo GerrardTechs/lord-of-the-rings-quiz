@@ -388,7 +388,10 @@
     </div>
 
     <!-- Audio Element (Music Quest) -->
-    <audio id="quest-audio" src="Lord of the Rings Main Theme - Only best part.mp3" loop></audio>
+    <audio id="quest-audio" src="Lord of the Rings Main Theme - Only best part.mp3" loop preload="auto"></audio>
+
+    <!-- Audio Element (Anniversary Theme) -->
+    <audio id="anniversary-audio" src="Shape of My Heart.mp3" loop preload="auto"></audio>
     
     <!-- YouTube Iframe Container -->
     <div id="youtube-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
@@ -520,9 +523,16 @@
                     }
 
                     // 2. Play Shape of My Heart
-                    const anniversaryAudio = new Audio("Shape of My Heart.mp3");
-                    anniversaryAudio.loop = true; 
-                    anniversaryAudio.play().catch(e => console.log("Failed to play song:", e));
+                    const anniversaryAudio = document.getElementById('anniversary-audio');
+                    anniversaryAudio.currentTime = 0;
+                    anniversaryAudio.play().catch(e => {
+                        console.log("Failed to play song:", e);
+                        // Fallback: try again on the next click anywhere, in case the
+                        // browser's autoplay policy blocked this attempt
+                        document.body.addEventListener('click', () => {
+                            anniversaryAudio.play().catch(() => {});
+                        }, { once: true });
+                    });
 
                     // 3. Transition FROM MEDIEVAL THEME TO ANNIVERSARY THEME!
                     transitionScreens('medieval-wrapper', 'anniversary-wrapper');
